@@ -10,7 +10,7 @@ public class SudokuServer {
     public static void main(String []args) {
         try {
             Registry reg= LocateRegistry.createRegistry(1099);
-            SudokuImplement sudokuImplement=new SudokuImplement(0,0);
+            SudokuImplement sudokuImplement=new SudokuImplement();
             //Object Name
             reg.rebind("Sudoku", sudokuImplement);
             System.out.println("Server Started");

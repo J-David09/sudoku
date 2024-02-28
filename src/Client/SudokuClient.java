@@ -1,7 +1,7 @@
 package Client;
 
 import Interface.SudokuInterface;
-
+import Model.SudokuMatrix;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +16,8 @@ import java.util.logging.Logger;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class SudokuClient {
     public static void main(String[] args) throws IOException {
-        int dimension = 0, method;
+        int option = 0;
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         do {
@@ -28,24 +29,24 @@ public class SudokuClient {
             System.out.println("--------------------------------");
             System.out.print("Option: ");
             try {
-                dimension=Integer.parseInt(br.readLine());
-                if (dimension!=4) {
+                option=Integer.parseInt(br.readLine());
+                if (option!=4) {
                     SudokuInterface sudokuInterface = (SudokuInterface) Naming.lookup("Sudoku");
-                    System.out.println("-- Select a matrix method solution --");
-                    System.out.println("1. Fundamental");
-                    System.out.println("2. Simple Clues");
-                    System.out.println("3. Advanced");
-                    System.out.println("4. Exit");
-                    System.out.println("-------------------------------------");
-                    System.out.print("Option: ");
-                    method=Integer.parseInt(br.readLine());
                     System.out.println();
-                    System.out.println(sudokuInterface.solve(method, sudokuInterface.generate(dimension)).toString());
+                    int[][][][] matrix = sudokuInterface.generate(option);
+                    //Print original matrix
+                    System.out.print("ORIGINAL MATRIX\n\n" + new SudokuMatrix(matrix, 0));
+
+                    //Print solved matrix
+                    try{
+                        System.out.println("SOLVED MATRIX\n\n" + sudokuInterface.solve(new SudokuMatrix(matrix, 0), 0, 0, 0,0).toString());
+                    } catch (NullPointerException ex){
+                        System.out.println("It couldn't solve sudoku"+ex.getMessage());
+                    }
                 }
             } catch (NotBoundException | MalformedURLException | RemoteException ex) {
                 Logger.getLogger(SudokuInterface.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } while (dimension != 4);
+        } while (option != 4);
     }
 }
